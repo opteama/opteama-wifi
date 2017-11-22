@@ -1,0 +1,143 @@
+swagger: '2.0'
+info:
+  title: AP Wifi API
+  version: "0.1"
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /wifi/ap/:
+    get:
+      tags: [AP]
+      operationId: ap.get_all
+      summary: Get all AP Wifi
+      responses:
+        200:
+          description: Return all AP
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AP'
+    post:
+      tags: [AP]
+      operationId: ap.post_bulk
+      summary: Deploy or update many AP
+      parameters:
+        - name: AP
+          in: body
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AP'
+      responses:
+        200:
+          description: New APs deployed
+  /wifi/ap/{site}:
+    get:
+      tags: [AP]
+      operationId: ap.get_by_site
+      summary: Get all AP within a Site
+      parameters:
+        - $ref: '#/parameters/Site'
+      responses:
+        200:
+          description: Return all AP within a Site
+          schema:
+            $ref: '#/definitions/AP'
+        404:
+          description: Unknown Site
+    post:
+      tags: [AP]
+      operationId: ap.post_by_Site
+      summary: Deploy or update an AP in a Site
+      parameters:
+        - $ref: '#/parameters/Site'
+        - name: AP
+          in: body
+          schema:
+            $ref: '#/definitions/AP'
+      responses:
+        200:
+          description: New AP deployed
+    put:
+      tags: [AP]
+      operationId: ap.put_by_company
+      summary: Update an AP in a Site
+      parameters:
+        - $ref: '#/parameters/Site'
+        - name: AP
+          in: body
+          schema:
+            $ref: '#/definitions/AP'
+      responses:
+        200:
+          description: AP updated
+    delete:
+      tags: [AP]
+      operationId: ap.delete_by_Site
+      summary: Undeploy an AP
+      parameters:
+        - $ref: '#/parameters/Site'
+      responses:
+        '204':
+          description: AP undeployed
+
+parameters:
+  Site:
+    name: site
+    description: Site names
+    in: path
+    type: string
+    required: true
+    enum: [TLS, MRG, SNZ, MLT, RCF]
+definitions:
+  AP:
+    type: object
+    required:
+      - building
+      - floor
+      - serial
+    properties:
+      name:
+        type: string
+        description: AP's name
+        example: "TLS-AP-SKP-1c-3"
+        minLength: 3
+        maxLength: 3
+      site:
+        type: string
+        enum: [TLS, MRG, SNZ, MLT, RCF]
+        description: Site's name
+        example: "TLS"
+      building:
+        type: string
+        description: Building's name
+        example: "SKP"
+        minLength: 3
+        maxLength: 3
+      floor:
+        type: string
+        description: Floor's name
+        example: "1c"
+        minLength: 3
+        maxLength: 3
+      lat:
+        type: string
+        description: Latitude
+        example: "3.4743636"
+        minLength: 6
+        maxLength: 10
+      lon:
+        type: string
+        description: Longitude
+        example: "40.3743194"
+        minLength: 6
+        maxLength: 10
+      serial:
+        type: string
+        description: Unique identifier
+        example: "Q2xx-xxxx-xxxx"
+        pattern: "^Q2[0-9A-Za-z-]{2}-[0-9A-Za-z-]{4}-[0-9A-Za-z-]{4}$"
+        readOnly: true
+
