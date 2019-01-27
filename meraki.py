@@ -18,7 +18,7 @@ class Meraki:
 
     def __repr__(self):
         return "{} - {} - {}".format(
-            self.token, self.url, self.organization_id
+            self.token, self.base_url, self.organization_id
         )
 
     # API features
@@ -73,7 +73,6 @@ class Meraki:
         return r
 
     def delete(self, serial):
-        return 
         return self.request("POST", "/networks/{}/devices/{}/remove".format(self.organization_id, serial))
 
     # Functions
